@@ -68,11 +68,12 @@ app.post('/api/save-favorite', async (req, res) => {
 app.get('/api/saved-quotes', async (req, res) => {
   try {
     const quotes = await Quote.find();
-    res.json({ quotes: quotes.map(q => q.quote) }); // Return only the quotes
+    res.json({ quotes: quotes }); // Return full quote object, including _id
   } catch (err) {
     res.status(500).json({ error: 'Failed to fetch saved quotes.' });
   }
 });
+
 
 // API route to delete a favorite quote
 app.delete('/api/delete-favorite/:id', async (req, res) => {
