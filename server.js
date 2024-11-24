@@ -74,5 +74,26 @@ app.get('/api/saved-quotes', async (req, res) => {
   }
 });
 
+// API route to delete a favorite quote
+app.delete('/api/delete-favorite/:id', async (req, res) => {
+  const { id } = req.params; // Get the quote ID from the URL
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ error: 'Invalid quote ID.' });
+  }
+
+  try {
+    const deletedQuote = await Quote.findByIdAndDelete(id); // Find and delete quote by ID
+
+    if (!deletedQuote) {
+      return res.status(404).json({ error: 'Quote not found.' });
+    }
+
+    res.json({ message: 'Quote deleted successfully.' });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to delete quote.' });
+  }
+});
+
 // Start server
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
