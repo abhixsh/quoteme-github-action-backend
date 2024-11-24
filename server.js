@@ -20,7 +20,6 @@ mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log('Connected to MongoDB'))
   .catch((err) => console.error('MongoDB connection error:', err));
 
-
 // MongoDB Schema for saving favorite quotes
 const quoteSchema = new mongoose.Schema({
   quote: String,
@@ -62,6 +61,16 @@ app.post('/api/save-favorite', async (req, res) => {
     res.status(201).json({ message: 'Quote saved to favorites.' });
   } catch (err) {
     res.status(500).json({ error: 'Failed to save quote.' });
+  }
+});
+
+// API route to get all saved quotes
+app.get('/api/saved-quotes', async (req, res) => {
+  try {
+    const quotes = await Quote.find();
+    res.json({ quotes: quotes.map(q => q.quote) }); // Return only the quotes
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch saved quotes.' });
   }
 });
 
